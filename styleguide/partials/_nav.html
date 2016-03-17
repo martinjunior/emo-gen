@@ -1,0 +1,27 @@
+<div class="sg-masthead">
+    <div class="sg-masthead-hd">
+        <h1 class="sg-hdg sg-hdg_1">
+            <a href="{{ pathToRoot }}index.html">
+                <abbr title="Elements Molecules Organisms">E.M.O.</abbr>
+            </a>
+        </h1>
+    </div>
+    <nav class="sg-masthead-bd">
+        <ul class="sg-nav">
+            {% for category in components %}
+                <li>
+                    <strong class="sg-nav-title">{{ loop.key }}</strong>
+                    <ul class="sg-nav">
+                        {% for component in components[loop.key] %}
+                            <li>
+                                <a href="{{ pathToRoot }}{{ component.path }}">
+                                    {{ component.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</div>
