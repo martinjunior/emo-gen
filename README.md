@@ -14,7 +14,7 @@ npm install emo-gen --save-dev
 
 ## Usage
 
-After intalling `emo-gen`, you may include it in your project, like so.
+After intalling `emo-gen`, you may include it in your project like so.
 
 ```javascript
 var StyleGuideGenerator = require('emo-gen');
@@ -29,8 +29,8 @@ The `StyleGuideGenerator` constructor accepts one parameter (`options`).
 Options:
 
 - path (`Object`): an object containing a `src` and/or `dest` property
-    - src (`String`): the location the styleguide source code is to be placed
-    - dest (`String`): the location the styleguide will build to
+    - src (`String`): the location the style-guide source code is to be placed
+    - dest (`String`): the location the style-guide will build to
 - delimiters (`Array`): delimiters, within which, component documentation is expected to be written
 
 Default options:
@@ -47,7 +47,7 @@ StyleGuideGenerator.OPTIONS = {
 
 ### styleGuideGenerator.place()
 
-Place the style-guide source in location specified by by `styleGuideGenerator.options.path.src`. Note that this method looks for an `index.html` in the specified source location. If it finds one, the style-guide source files won't be placed; otherwise, they will be. When using `emo-gen`, `styleGuideGenerator.place` must be ran before `styleGuideGenerator.build`.
+Place the style-guide source in the location specified by `styleGuideGenerator.options.path.src`. Note that this method looks for an `index.html` file in the specified source location. If it finds one, the style-guide source files will not be placed; otherwise, they will be. When using `emo-gen`, `styleGuideGenerator.place` must be ran before `styleGuideGenerator.build`.
 
 The `place` method returns a promise.
 
@@ -96,7 +96,7 @@ styleGuideGenerator.scrape(files).then(function(components) {
 
 ### styleGuideGenerator.build(components)
 
-Build the style-guide of the provided components. `components` is expected to be the return value of `styleGuideGenerator.scrape`.
+Build the style-guide from the provided components. `components` is expected to take the form of the return value of `styleGuideGenerator.scrape`.
 
 Example:
 
