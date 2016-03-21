@@ -59,6 +59,39 @@ styleGuideGenerator.place().then(function() {
 });
 ```
 
+### styleGuideGenerator.copy(files)
+
+Copy the provided files. Know that `files` must be an array containing src-dest files mappings. `copy` returns a promise.
+
+```javascript
+var files = [{
+    src: 'web/assets/styles/app.css',
+    dest: 'styleguide/dest/assets/styles/app.css'
+}];
+
+styleGuideGenerator.copy(files).then(function() {
+    // yay, files copied!
+});
+```
+
+### styleGuideGenerator.scrape(files)
+
+Scrape the provided files for component documentation. Said component documentation is used to generate the style-guide. The `file` parameter must be an array for of file paths and/or glob patterns.
+
+Example:
+
+```javascript
+var files = [
+    'src/assets/scss/*.scss',
+    'src/assets/scripts/*.js',
+    'src/index.html'
+];
+
+styleGuideGenerator.scrape(files).then(function(components) {
+    console.log(components); // the components that were scraped
+});
+```
+
 ## License
 
 Licensed under MIT
