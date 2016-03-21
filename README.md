@@ -109,13 +109,19 @@ styleGuideGenerator.scrape(files).then(function(components) {
 ## A complete example
 
 ```javascript
-var files = ['src/assets/scss/**/*.scss'];
+var filesToScrape = ['src/assets/scss/**/*.scss'];
+var filesToCopy = [{
+    src: 'web/assets/styles/app.css',
+    dest: 'styleguide/dest/assets/styles/app.css'
+}];
 var styleGuideGenerator = new StyleGuideGenerator();
 
 styleGuideGenerator.place().then(function() {
-    return styleGuideGenerator.scrape(files).then(function(components) {
-        return styleGuideGenerator.build(components);
-    });
+    return styleGuideGenerator.copy(filesToCopy).then(function() {
+        return styleGuideGenerator.scrape(filesToScrape).then(function(components) {
+            return styleGuideGenerator.build(components);
+        });
+    }));
 });
 
 ```
