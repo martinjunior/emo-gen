@@ -47,7 +47,7 @@ StyleGuideGenerator.OPTIONS = {
 
 ### styleGuideGenerator.place()
 
-Place the style-guide source in location specified by by `styleGuideGenerator.options.path.src`. Note that this method looks for an `index.html` in the specified source location. If it finds one, the style-guide source files won't be placed; otherwise, they will be.
+Place the style-guide source in location specified by by `styleGuideGenerator.options.path.src`. Note that this method looks for an `index.html` in the specified source location. If it finds one, the style-guide source files won't be placed; otherwise, they will be. When using `emo-gen`, `styleGuideGenerator.place` must be ran before `styleGuideGenerator.build`.
 
 The `place` method returns a promise.
 
@@ -96,7 +96,7 @@ styleGuideGenerator.scrape(files).then(function(components) {
 
 ### styleGuideGenerator.build(components)
 
-Build the style-guide of the provided components. `components` is expected to be the return value of `styleGuideGenerator.scrape`. Internally, `styleGuideGenerator.build` runs `styleGuideGenerator.buildIndex` and `styleGuideGenerator.buildComponents`.
+Build the style-guide of the provided components. `components` is expected to be the return value of `styleGuideGenerator.scrape`.
 
 Example:
 
@@ -104,6 +104,20 @@ Example:
 styleGuideGenerator.scrape(files).then(function(components) {
     return styleGuideGenerator.build(components);
 });
+```
+
+## A complete example
+
+```javascript
+var files = ['src/assets/scss/**/*.scss'];
+var styleGuideGenerator = new StyleGuideGenerator();
+
+styleGuideGenerator.place().then(function() {
+    return styleGuideGenerator.scrape(files).then(function(components) {
+        return styleGuideGenerator.build(components);
+    });
+});
+
 ```
 
 ## License
