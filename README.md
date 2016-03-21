@@ -29,8 +29,8 @@ The `StyleGuideGenerator` constructor accepts one parameter (`options`).
 Options:
 
 - path (`Object`): an object containing a `src` and/or `dest` property
-    - src (`String`): the location the style-guide source code is to be placed
-    - dest (`String`): the location the style-guide will build to
+    - src (`String`): the location where the style-guide source code is to be placed
+    - dest (`String`): the location where the style-guide will build to
 - delimiters (`Array`): delimiters, within which, component documentation is expected to be written
 
 Default options:
@@ -47,7 +47,7 @@ StyleGuideGenerator.OPTIONS = {
 
 ### styleGuideGenerator.place()
 
-Place the style-guide source in the location specified by `styleGuideGenerator.options.path.src`. Note that this method looks for an `index.html` file in the specified source location. If it finds one, the style-guide source files will not be placed; otherwise, they will be. When using `emo-gen`, `styleGuideGenerator.place` must be ran before `styleGuideGenerator.build`.
+Place the style-guide source in the location specified by `styleGuideGenerator.options.path.src`. Note that this method looks for an `index.html` file in the specified source location. If it finds one, the style-guide source files will not be placed; otherwise, they will be. `styleGuideGenerator.place` must be ran before `styleGuideGenerator.build`.
 
 The `place` method returns a promise.
 
@@ -128,7 +128,7 @@ styleGuideGenerator.place().then(function() {
 
 ## Documentation Syntax
 
-`emo-gen` was made to scrape documentation from source files. Within a given source file, documentation is expected to be written in [YAML](http://www.yaml.org/) and within the delimiters specified within `styleGuideGenerator.options.delimiters`. Example documentation follows.
+`emo-gen` was made to scrape documentation from source files. Within a given source file, documentation is expected to be written in [YAML](http://www.yaml.org/) and within the delimiters specified by `styleGuideGenerator.options.delimiters`. Example documentation follows.
 
 ```css
 /*
@@ -168,7 +168,7 @@ Because writing a bunch of documentation in your source files isn't fun, `emo-ge
 .btn { ... }
 ```
 
-`emo-gen` expects that all components use a `name` and `category` property. The `description` property will be used as the main body of a given components documentation. Beyond these properties, `emo-gen` will allow you to add properties as you wish.
+`emo-gen` expects that all components use a `name` and `category` property; if a component does not use these two properties, it will not show up in the style-guide. The `description` property will be used as the main body of a given components documentation. Beyond these properties, `emo-gen` will allow you to add properties as you wish.
 
 ```css
 /*
@@ -190,6 +190,24 @@ Because writing a bunch of documentation in your source files isn't fun, `emo-ge
  */
 
 .btn { ... }
+```
+
+## The Source Files
+
+The style-guide source directory contains the following.
+
+```
+----/styleguide/src/
+--------/assets/
+------------/styles/
+----------------/styleguide.css
+--------/layouts/
+------------/default.html
+--------/partials/
+------------/_nav.html
+--------/templates/
+------------/component.html
+----/index.html
 ```
 
 ## License
