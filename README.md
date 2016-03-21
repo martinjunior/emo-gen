@@ -76,7 +76,9 @@ styleGuideGenerator.copy(files).then(function() {
 
 ### styleGuideGenerator.scrape(files)
 
-Scrape the provided files for component documentation. Said component documentation is used to generate the style-guide. The `file` parameter must be an array for of file paths and/or glob patterns.
+Scrape the provided files for component documentation. Said component documentation is used to generate the style-guide. The `file` parameter must be an array of file paths and/or glob patterns.
+
+Returns a promise.
 
 Example:
 
@@ -88,7 +90,19 @@ var files = [
 ];
 
 styleGuideGenerator.scrape(files).then(function(components) {
-    console.log(components); // the components that were scraped
+    console.log(components); // [{ name: 'Btn', category: 'Modules', descrption: '<button></button>' }]
+});
+```
+
+### styleGuideGenerator.build(components)
+
+Build the style-guide of the provided components. `components` is expected to be the return value of `styleGuideGenerator.scrape`. Internally, `styleGuideGenerator.build` runs `styleGuideGenerator.buildIndex` and `styleGuideGenerator.buildComponents`.
+
+Example:
+
+```javascript
+styleGuideGenerator.scrape(files).then(function(components) {
+    return styleGuideGenerator.build(components);
 });
 ```
 
