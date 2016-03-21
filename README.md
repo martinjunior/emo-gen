@@ -126,6 +126,72 @@ styleGuideGenerator.place().then(function() {
 
 ```
 
+## Documentation Syntax
+
+`emo-gen` was made to scrape documentation from source files. Within a given source file, documentation is expected to be written in [YAML](http://www.yaml.org/) and within the delimiters specified within `styleGuideGenerator.options.delimiters`. Example documentation follows.
+
+```css
+/*
+
+{#
+
+    name: Btn
+
+    category: Content
+
+    description: <button>I'm a button!<button>
+
+#}
+
+ */
+
+.btn { ... }
+```
+
+Because writing a bunch of documentation in your source files isn't fun, `emo-gen` makes it possible to load external documentation from markdown files. Note that the specified path should be relative to the file in which it was written.
+
+```css
+/*
+
+{#
+
+    name: Btn
+
+    category: Content
+
+    description: relative/path/to/btn_docs.md 
+
+#}
+
+ */
+
+.btn { ... }
+```
+
+`emo-gen` expects that all components use a `name` and `category` property. The `description` property will be used as the main body of a given components documentation. Beyond these properties, `emo-gen` will allow you to add properties as you wish.
+
+```css
+/*
+
+{#
+
+    name: Btn
+
+    category: Content
+
+    version: 1.0.0
+
+    author: Some Person
+
+    description: relative/path/to/btn_docs.md
+
+#}
+
+ */
+
+.btn { ... }
+```
+
 ## License
 
 Licensed under MIT
