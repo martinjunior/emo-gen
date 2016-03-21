@@ -232,7 +232,7 @@ The style-guide destination folder will look as such.
 
 ### The Build Process
 
-For each component category found in your source file(s), `emo-gen` will create a new folder; within the view, categories will be listed in alphabetical order. One `.html` file will be created for each component.
+For each component category found in your source file(s), `emo-gen` will create a new folder; within the nav, categories will be listed in alphabetical order. One `.html` file will be created for each component.
 
 Consider the following documention block.
 
@@ -359,7 +359,7 @@ This model is expose to each component template as the style-guide is being buil
 
 ```javascript
 var data = {
-    pathToRoot: '',           // a relative path to the index.html file
+    pathToRoot: '../',           // a relative path to the index.html file
     component: component,     // the current component
     components: components    // a list of all the components
 };
