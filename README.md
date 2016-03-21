@@ -10,17 +10,17 @@ npm install emo-gen --save-dev
 
 ## Overview
 
-`emo-gen` aids in the developemnt of style-guides, providing a slim API by which a style-guide may be generated. At the time of this writing, `emo-gen` uses the [swig.js](http://paularmstrong.github.io/swig/) template engine. Future version of `emo-gen` may support other template engines.
+`emo-gen` aids in the developemnt of style-guides, providing a slim API by which a style-guide may be generated. At the time of this writing, `emo-gen` uses the [swig.js](http://paularmstrong.github.io/swig/) template engine. Future versions of `emo-gen` may support other template engines.
 
 ## Usage
 
-As mentioned, `emo-gen` is a node module. After intalling `emo-gen`, you may include it in your project, like so.
+After intalling `emo-gen`, you may include it in your project, like so.
 
 ```javascript
 var StyleGuideGenerator = require('emo-gen');
 ```
 
-`emo-gen` exposes the `StyleGuideGenerator` class, which makes available a number of methods. First, let's look at the constructor.
+`emo-gen` exposes the `StyleGuideGenerator` class, which makes available a number of methods. Let's look at the constructor.
 
 ### StyleGuideGenerator(options)
 
@@ -43,6 +43,20 @@ StyleGuideGenerator.OPTIONS = {
     },
     delimiters: ['{#', '#}']
 };
+```
+
+### styleGuideGenerator.place()
+
+Place the style-guide source in location specified by by `styleGuideGenerator.options.path.src`. Note that this method looks for an `index.html` in the specified source location. If it finds one, the style-guide source files won't be placed; otherwise, they will be.
+
+The `place` method returns a promise.
+
+Example:
+
+```javascript
+styleGuideGenerator.place().then(function() {
+    // do something
+});
 ```
 
 ## License
