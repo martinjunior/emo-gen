@@ -197,18 +197,222 @@ Because writing a bunch of documentation in your source files isn't fun, `emo-ge
 The style-guide source directory contains the following.
 
 ```
-----/styleguide/src/
+----/styleguide/src/              <- default style-guide source directory
 --------/assets/
 ------------/styles/
-----------------/styleguide.css
+----------------/styleguide.css   <- the style-guide's styles
 --------/layouts/
-------------/default.html
+------------/default.html         <- swig layouts (see http://goo.gl/fD39tI)
 --------/partials/
-------------/_nav.html
+------------/_nav.html            <- the main navigation (renders component list)
 --------/templates/
-------------/component.html
-----/index.html
+------------/component.html       <- the default component template
+----/index.html                   <- the style-guide's homepage
 ```
+
+## The Build
+
+The style-guide destination folder will look as such.
+
+```
+----/styleguide/dest/             <- default style-guide dest directory
+--------/assets/
+------------/styles/
+----------------/styleguide.css   <- the style-guide's styles
+----------------/app.css          <- styles copied over
+----/category/                    <- each category gets its own folder
+--------/btn.html                 <- each component gets its own file
+----/other-category/
+--------/box.html
+--------/card.html
+----/third-category/
+--------/anchor.html
+----/index.html                   <- the style-guide's homepage
+```
+
+### The Build Process
+
+For each component category found in your source file(s), `emo-gen` will create a new folder; within the view, categories will be listed in alphabetical order. One `.html` file will be created for each component.
+
+Consider the following documention block.
+
+```css
+/*
+
+{#
+
+    name: Btn
+
+    category: Content
+
+    description: relative/path/to/btn_docs.md
+
+#}
+
+ */
+
+.btn { ... }
+```
+
+The previous doc block will generate the following structure within the style-guide destination.
+
+```
+----/styleguide/dest/
+--------/Content/
+------------/Btn.html
+```
+
+#### Using a Custom Template
+
+By default, components are built against the `components.html` template found in the style-guide `src` `templates` folder. To use a custom template, simply provide a `template` property in your doc block. The value of said property should be a relative path from the root of the style-guide `src` folder.
+
+Example:
+
+```css
+/*
+
+{#
+
+    name: Btn
+
+    category: Content
+
+    template: templates/custom.html
+
+    description: relative/path/to/btn_docs.md
+
+#}
+
+ */
+
+.btn { ... }
+```
+
+#### Using a Custom Filename
+
+By default, `emo-gen` will use a component's `name` property to construct its filename. Consider the following doc block.
+
+```css
+/*
+
+{#
+
+    name: Btn
+
+    category: Content
+
+    description: relative/path/to/btn_docs.md
+
+#}
+
+ */
+
+.btn { ... }
+```
+
+The previous documentation will generate the following structure.
+
+```
+----/styleguide/dest/
+----/Content/
+--------/Btn.html                 <- notice how I'm named after my name
+```
+
+To change this default, apply a filename property to your doc block. Like so:
+
+```css
+/*
+
+{#
+
+    name: Btn
+
+    category: Content
+
+    filename: custom.html
+
+    description: relative/path/to/btn_docs.md
+
+#}
+
+ */
+
+.btn { ... }
+```
+
+### The View Models
+
+During the build process (`styleGuideGenerator.build()`), two models are exposed to the templates: one to index.html and another to the component templates.
+
+#### The Homepage (`index.html`) Model
+
+```javascript
+var data = {
+    pathToRoot: '',           // a relative path to the index.html file
+    components: components    // a list of all the components
+};
+```
+
+#### The Component Model
+
+This model is expose to each component template as the style-guide is being built.
+
+```javascript
+var data = {
+    pathToRoot: '',           // a relative path to the index.html file
+    component: component,     // the current component
+    components: components    // a list of all the components
+};
+```
+
+##### A Word on the `component` Property.
+
+The component property will mirror the same model as the doc block that was used to create it.
+
+Example:
+
+```css
+/*
+
+{#
+
+    name: Btn
+
+    category: Content
+
+    author: Some Person
+
+    color: red
+
+    number: 20
+
+    description: relative/path/to/btn_docs.md
+
+#}
+
+ */
+
+.btn { ... }
+```
+
+The previous doc block will generate the following component model.
+
+```javascript
+var component = {
+    name: 'Btn',
+    category: 'Content',
+    author: 'Some Person',
+    color: 'red',
+    number: 20,
+    description: 'relative/path/to/btn_docs.md'
+};
+```
+
+This data is available to the templates via the `component` global.
+
+## grunt-emo
+
+`grunt-emo` is a Grunt wrapper for `emo-gen`, which makes using `emo-gen` easy. See [grunt-emo](https://github.com/martinjunior/emo)
 
 ## License
 
