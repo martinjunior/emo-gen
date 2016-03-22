@@ -1,7 +1,7 @@
 <div class="sg-masthead">
     <div class="sg-masthead-hd">
         <h1 class="sg-hdg sg-hdg_1">
-            <a href="{{ pathToRoot }}index.html">
+            <a href="{{ pathToRoot }}index.html" class="sg-anchor">
                 <abbr title="Elements Molecules Organisms">E.M.O.</abbr>
             </a>
         </h1>
@@ -14,7 +14,7 @@
                     <ul class="sg-nav">
                         {% for component in components[loop.key] %}
                             <li>
-                                <a href="{{ pathToRoot }}{{ component.path }}">
+                                <a href="{{ pathToRoot }}{{ component.path }}" class="sg-anchor">
                                     {{ component.name }}
                                 </a>
                             </li>

@@ -1,147 +1,27 @@
-html,
-body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-.sg-wrapper {
-    max-width: 960px;
-    margin: auto;
-}
-
-.sg-page-hd {
-    width: 240px;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    overflow: auto;
-    border-right: 1px solid #f1f1f1;
-    background: #ffffff;
-    box-shadow: 0px 2px 2px rgba(241, 241, 241, 0.8);
-}
-
-.sg-page-bd {
-    padding: 50px;
-}
-
-.sg-page-hd + .sg-page-bd {
-    padding-left: 290px;
-}
-
-.sg-masthead > * {
-    padding: 20px;
-}
-
-.sg-masthead > * + * {
-    border-top: 1px solid #f1f1f1;
-}
-
-.sg-nav-title {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.sg-nav .sg-nav {
-    margin-left: 20px;
-}
-
-.sg-nav > * + * {
-    margin-top: 10px;
-}
-
-.sg-component > * + * {
-    border-top: 1px solid #f1f1f1;
-}
-
-.sg-component-box {
-    padding: 20px;
-}
-
-.sg-component-box > * + * {
-    margin-top: 15px;
-}
-
-.sg-hdg {
-    font-size: 32px;
-}
-
-.sg-hdg_2 {
-    font-size: 28px;
-}
-
-.sg-hdg_3 {
-    font-size: 24px;
-}
-
-.sg-hdg_4 {
-    font-size: 20px;
-}
-
-.sg-userContent > * + * {
-    margin-top: 16px;
-}
-
-.sg-userContent > h1:not([class]) {
-    font-size: 32px;
-    margin-top: 35px;
-}
-
-.sg-userContent > h2:not([class]) {
-    font-size: 28px;
-    margin-top: 30px;
-}
-
-.sg-userContent > h3:not([class]) {
-    font-size: 24px;
-    margin-top: 25px;
-}
-
-.sg-userContent > h4:not([class]),
-.sg-userContent > h5:not([class]) {
-    font-size: 20px;
-    margin-top: 20px;
-}
-
-.sg-userContent > ul:not([class]) {
-    margin-left: 30px;
-}
-
-.sg-userContent > ul:not([class]) li {
-    list-style-type: disc;
-}
-
-.sg-userContent > hr:not([class]) {
-    height: 1px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    border: none;
-    background: #f1f1f1;
-}
-
-.sg-userContent > hr:not([class]) + *:not([class]) {
-    margin-top: 20px;
-}
-
-.sg-example {
-    padding: 20px;
-    border-radius: 2px;
-    border: 1px solid #f1f1f1;
-}
-
-code {
-    padding: 2px;
-    border-radius: 2px;
-    background: #333333;
-    color: white;
-    line-height: 1.5;
-}
-
-pre code {
-    padding: initial;
-    border-radius: initial;
-    background: initial;
-    line-height: initial;
-}
+<div class="sg-masthead">
+    <div class="sg-masthead-hd">
+        <h1 class="sg-hdg sg-hdg_1">
+            <a href="{{ pathToRoot }}index.html" class="sg-anchor">
+                <abbr title="Elements Molecules Organisms">E.M.O.</abbr>
+            </a>
+        </h1>
+    </div>
+    <nav class="sg-masthead-bd">
+        <ul class="sg-nav">
+            {% for category in components %}
+                <li>
+                    <strong class="sg-nav-title">{{ loop.key }}</strong>
+                    <ul class="sg-nav">
+                        {% for component in components[loop.key] %}
+                            <li>
+                                <a href="{{ pathToRoot }}{{ component.path }}" class="sg-anchor">
+                                    {{ component.name }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</div>
