@@ -22,6 +22,20 @@
                     </ul>
                 </li>
             {% endfor %}
+            {% if views.length %}
+            <li>
+                <strong class="sg-nav-title">views</strong>
+                <ul class="sg-nav">
+                    {% for view in views %}
+                        <li>
+                            <a href="{{ pathToRoot }}{{ view.path }}" class="sg-anchor">
+                                {{ view.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endif %}
         </ul>
     </nav>
 </div>
