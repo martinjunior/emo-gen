@@ -10,7 +10,7 @@ npm install emo-gen --save-dev
 
 ## Overview
 
-`emo-gen` aids in the developemnt of style-guides, providing a slim API by which a style-guide may be generated. At the time of this writing, `emo-gen` uses the [swig.js](http://paularmstrong.github.io/swig/) template engine. Future versions of `emo-gen` may support other template engines.
+`emo-gen` aids in the developemnt of style-guides, providing a slim API by which a style-guide may be generated. `emo-gen` uses the [swig.js](http://paularmstrong.github.io/swig/) template engine. Future versions of `emo-gen` may support other template engines.
 
 ## Usage
 
@@ -20,7 +20,7 @@ After intalling `emo-gen`, you may include it in your project like so.
 var StyleGuideGenerator = require('emo-gen');
 ```
 
-`emo-gen` exposes the `StyleGuideGenerator` class, which makes available a number of methods. Let's look at the constructor.
+`emo-gen` exposes the `StyleGuideGenerator` class, which makes available a number of methods.
 
 ### StyleGuideGenerator(options)
 
@@ -47,7 +47,7 @@ StyleGuideGenerator.OPTIONS = {
 
 ### styleGuideGenerator.place()
 
-Place the style-guide source in the location specified by `styleGuideGenerator.options.path.src`. Note that this method looks for an `index.html` file in the specified source location. If it finds one, the style-guide source files will not be placed; otherwise, they will be. `styleGuideGenerator.place` must be ran before `styleGuideGenerator.build`.
+Place the style-guide source in the location specified by `styleGuideGenerator.options.path.src`. Note that this method looks for an `index.html` file in the specified source location. If it finds one, the style-guide source files will not be placed; otherwise, they will be. `styleGuideGenerator.place` must run before `styleGuideGenerator.build`.
 
 The `place` method returns a promise.
 
