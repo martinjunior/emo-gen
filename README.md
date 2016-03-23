@@ -74,11 +74,9 @@ styleGuideGenerator.copy(files).then(function() {
 });
 ```
 
-### styleGuideGenerator.scrape(files)
+### styleGuideGenerator.build(componentFiles)
 
-Scrape the provided files for component documentation. Said component documentation is used to generate the style-guide. The `file` parameter must be an array of file paths and/or glob patterns.
-
-Returns a promise.
+Build the style-guide from the provided source files. The `components` parameter must be a list of files and/or glob patterns (e.g., `['src/assets/scss/**']`).
 
 Example:
 
@@ -89,27 +87,15 @@ var files = [
     'src/index.html'
 ];
 
-styleGuideGenerator.scrape(files).then(function(components) {
-    console.log(components); // [{ name: 'Btn', category: 'Modules', descrption: '<button></button>' }]
-});
-```
-
-### styleGuideGenerator.build(components)
-
-Build the style-guide from the provided components. `components` is expected to take the form of the return value of `styleGuideGenerator.scrape`.
-
-Example:
-
-```javascript
-styleGuideGenerator.scrape(files).then(function(components) {
-    return styleGuideGenerator.build(components);
+styleGuideGenerator.build(files).then(function() {
+    // the style-guide was built!
 });
 ```
 
 ## A complete example
 
 ```javascript
-var filesToScrape = ['src/assets/scss/**/*.scss'];
+var componentFiles = ['src/assets/scss/**/*.scss'];
 var filesToCopy = [{
     src: 'web/assets/styles/app.css',
     dest: 'styleguide/dest/assets/styles/app.css'
@@ -118,9 +104,7 @@ var styleGuideGenerator = new StyleGuideGenerator();
 
 styleGuideGenerator.place().then(function() {
     return styleGuideGenerator.copy(filesToCopy).then(function() {
-        return styleGuideGenerator.scrape(filesToScrape).then(function(components) {
-            return styleGuideGenerator.build(components);
-        });
+        return styleGuideGenerator.build(componentFiles);
     }));
 });
 
@@ -168,7 +152,7 @@ Because writing a bunch of documentation in your source files isn't fun, `emo-ge
 .btn { ... }
 ```
 
-`emo-gen` expects that all components use a `name` and `category` property; if a component does not use these two properties, it will not show up in the style-guide. The `description` property will be used as the main body of a given components documentation. Beyond these properties, `emo-gen` will allow you to add properties as you wish.
+`emo-gen` expects that all components use a `name`, `category`, and `description` property; if a component does not use these properties, it will not show up in the style-guide. The `description` property will be used as the main body of a given components documentation. Beyond these properties, `emo-gen` will allow you to add properties as you wish.
 
 ```css
 /*
@@ -355,11 +339,11 @@ var data = {
 
 #### The Component Model
 
-This model is expose to each component template as the style-guide is being built.
+This model is exposed to each component template as the style-guide is being built.
 
 ```javascript
 var data = {
-    pathToRoot: '../',           // a relative path to the index.html file
+    pathToRoot: '../',        // a relative path to the index.html file
     component: component,     // the current component
     components: components    // a list of all the components
 };
@@ -404,7 +388,7 @@ var component = {
     author: 'Some Person',
     color: 'red',
     number: 20,
-    description: 'relative/path/to/btn_docs.md'
+    description: '<button>/<button>'  // the contents of relative/path/to/btn_docs.md
 };
 ```
 
@@ -412,7 +396,7 @@ This data is available to the templates via the `component` global.
 
 ## grunt-emo
 
-`grunt-emo` is a Grunt wrapper for `emo-gen`, which makes using `emo-gen` easy. See [grunt-emo](https://github.com/martinjunior/emo)
+`grunt-emo` is a Grunt wrapper for `emo-gen`, which makes using `emo-gen` easy. See [grunt-emo](https://github.com/martinjunior/emo) for more details.
 
 ## License
 
