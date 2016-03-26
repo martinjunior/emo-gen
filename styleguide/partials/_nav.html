@@ -8,34 +8,37 @@
     </div>
     <nav class="sg-masthead-bd">
         <ul class="sg-nav">
-            {% for category in components %}
-                <li>
-                    <strong class="sg-nav-title">{{ loop.key }}</strong>
-                    <ul class="sg-nav">
-                        {% for component in components[loop.key] %}
+            <li>
+                <strong class="sg-nav-title">Components</strong>
+                <ul class="sg-nav">
+                {% for category, components in components %}
+                    <li>
+                        <strong class="sg-nav-title">{{ category }}</strong>
+                        <ul class="sg-nav">
+                        {% for component in components %}
                             <li>
                                 <a href="{{ pathToRoot }}{{ component.path }}" class="sg-anchor">
                                     {{ component.name }}
                                 </a>
                             </li>
                         {% endfor %}
-                    </ul>
-                </li>
-            {% endfor %}
-            {% if views.length %}
-            <li>
-                <strong class="sg-nav-title">views</strong>
-                <ul class="sg-nav">
-                    {% for view in views %}
-                        <li>
-                            <a href="{{ pathToRoot }}{{ view.path }}" class="sg-anchor">
-                                {{ view.name }}
-                            </a>
-                        </li>
-                    {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
                 </ul>
             </li>
-            {% endif %}
+            <li>
+                <strong class="sg-nav-title">Views</strong>
+                <ul class="sg-nav">
+                {% for view in views %}
+                    <li>
+                        <a href="{{ pathToRoot }}{{ view.path }}" class="sg-anchor">
+                            {{ view.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+                </ul>
+            </li>
         </ul>
     </nav>
 </div>
