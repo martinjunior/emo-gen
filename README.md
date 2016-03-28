@@ -10,7 +10,7 @@ npm install emo-gen --save-dev
 
 ## Overview
 
-`emo-gen` aids in the developemnt of style-guides, providing a slim API by which a style-guide may be generated. `emo-gen` uses the [swig.js](http://paularmstrong.github.io/swig/) template engine. Future versions of `emo-gen` may support other template engines.
+`emo-gen` aids in the developemnt of style-guides, providing a slim API by which a style-guide may be generated. `emo-gen` uses the [Nunjucks.js](https://mozilla.github.io/nunjucks/) template engine.
 
 ## Usage
 
@@ -31,17 +31,15 @@ Options:
 - path (`Object`): an object containing a `src` and/or `dest` property
     - src (`String`): the location where the style-guide source code is to be placed
     - dest (`String`): the location where the style-guide will build to
-- delimiters (`Array`): delimiters, within which, component documentation is expected to be written
 
 Default options:
 
 ```javascript
 StyleGuideGenerator.OPTIONS = {
     path: {
-        src: 'styleguide/src/',
-        dest: 'styleguide/dest/'
-    },
-    delimiters: ['{#', '#}']
+        src: 'styleguide/src/',  // default
+        dest: 'styleguide/dest/' // default
+    }
 };
 ```
 
@@ -74,20 +72,28 @@ styleGuideGenerator.copy(files).then(function() {
 });
 ```
 
-### styleGuideGenerator.build(componentFiles)
+### styleGuideGenerator.build(componentFiles, viewDir, componentData)
 
-Build the style-guide from the provided source files. The `components` parameter must be a list of files and/or glob patterns (e.g., `['src/assets/scss/**']`).
+Build the style-guide from the provided parameters. The `componentFiles` parameter must be a list of files and/or glob patterns (e.g., `['src/assets/scss/**']`). The `viewDir` parameter must be a relative path from the root of the style-guide source directory (`styleguide/src/` by default). `emo-gen` will treat all the `.html` files within the `viewDir` as static pages, building each one using Nunjucks api. `componentData` is an optional parameter that must take the shape of a component collection.
 
 Example:
 
 ```javascript
-var files = [
+var componentFiles = [
     'src/assets/scss/*.scss',
     'src/assets/scripts/*.js',
     'src/index.html'
 ];
 
-styleGuideGenerator.build(files).then(function() {
+var viewDir = 'views';
+
+var componentData = [{
+    name: 'colors',
+    category: 'standards',
+    description: 'docs/colors.md'
+}];
+
+styleGuideGenerator.build(componentFiles, viewDir, componentData).then(function() {
     // the style-guide was built!
 });
 ```
@@ -112,20 +118,16 @@ styleGuideGenerator.place().then(function() {
 
 ## Documentation Syntax
 
-`emo-gen` was made to scrape documentation from source files. Within a given source file, documentation is expected to be written in [YAML](http://www.yaml.org/) and within the delimiters specified by `styleGuideGenerator.options.delimiters`. Example documentation follows.
+`emo-gen` was made to scrape documentation from source files. Within a given source file, documentation is expected to be written as [YAML](http://www.yaml.org/) front mattter. Example documentation follows.
 
 ```css
 /*
 
-{#
-
-    name: Btn
-
-    category: Content
-
-    description: <button>I'm a button!<button>
-
-#}
+---
+name: Btn
+category: Content
+description: <button>I'm a button!<button>
+---
 
  */
 
@@ -137,15 +139,11 @@ Because writing a bunch of documentation in your source files isn't fun, `emo-ge
 ```css
 /*
 
-{#
-
-    name: Btn
-
-    category: Content
-
-    description: relative/path/to/btn_docs.md 
-
-#}
+---
+name: Btn
+category: Content
+description: relative/path/to/btn_docs.md 
+---
 
  */
 
@@ -157,19 +155,13 @@ Because writing a bunch of documentation in your source files isn't fun, `emo-ge
 ```css
 /*
 
-{#
-
-    name: Btn
-
-    category: Content
-
-    version: 1.0.0
-
-    author: Some Person
-
-    description: relative/path/to/btn_docs.md
-
-#}
+---
+name: Btn
+category: Content
+version: 1.0.0
+author: Some Person
+description: relative/path/to/btn_docs.md
+---
 
  */
 
@@ -223,15 +215,11 @@ Consider the following documention block.
 ```css
 /*
 
-{#
-
-    name: Btn
-
-    category: Content
-
-    description: relative/path/to/btn_docs.md
-
-#}
+---
+name: Btn
+category: Content
+description: relative/path/to/btn_docs.md
+---
 
  */
 
@@ -255,17 +243,12 @@ Example:
 ```css
 /*
 
-{#
-
-    name: Btn
-
-    category: Content
-
-    template: templates/custom.html
-
-    description: relative/path/to/btn_docs.md
-
-#}
+---
+name: Btn
+category: Content
+template: templates/custom.html
+description: relative/path/to/btn_docs.md
+---
 
  */
 
@@ -279,15 +262,11 @@ By default, `emo-gen` will use a component's `name` property to construct its fi
 ```css
 /*
 
-{#
-
-    name: Btn
-
-    category: Content
-
-    description: relative/path/to/btn_docs.md
-
-#}
+---
+name: Btn
+category: Content
+description: relative/path/to/btn_docs.md
+---
 
  */
 
@@ -307,17 +286,12 @@ To change this default, apply a filename property to your doc block. Like so:
 ```css
 /*
 
-{#
-
-    name: Btn
-
-    category: Content
-
-    filename: custom.html
-
-    description: relative/path/to/btn_docs.md
-
-#}
+---
+name: Btn
+category: Content
+filename: custom.html
+description: relative/path/to/btn_docs.md
+---
 
  */
 
@@ -326,14 +300,15 @@ To change this default, apply a filename property to your doc block. Like so:
 
 ### The View Models
 
-During the build process (`styleGuideGenerator.build()`), two models are exposed to the templates: one to index.html and another to the component templates.
+During the build process (`styleGuideGenerator.build()`), three models are exposed to the templates: one to index.html, another to the component templates, and a third to the views.
 
 #### The Homepage (`index.html`) Model
 
 ```javascript
 var data = {
     pathToRoot: '',           // a relative path to the index.html file
-    components: components    // a list of all the components
+    components: components,   // a list of all the components,
+    views: views              // a list of all the views
 };
 ```
 
@@ -345,7 +320,8 @@ This model is exposed to each component template as the style-guide is being bui
 var data = {
     pathToRoot: '../',        // a relative path to the index.html file
     component: component,     // the current component
-    components: components    // a list of all the components
+    components: components,   // a list of all the components,
+    views: views              // a list of all the views
 };
 ```
 
@@ -358,21 +334,14 @@ Example:
 ```css
 /*
 
-{#
-
-    name: Btn
-
-    category: Content
-
-    author: Some Person
-
-    color: red
-
-    number: 20
-
-    description: relative/path/to/btn_docs.md
-
-#}
+---
+name: Btn
+category: Content
+author: Some Person
+color: red
+number: 20
+description: relative/path/to/btn_docs.md
+---
 
  */
 
@@ -393,6 +362,19 @@ var component = {
 ```
 
 This data is available to the templates via the `component` global.
+
+#### The View Model
+
+This model is exposed to each view as the style-guide is being built.
+
+```javascript
+var data = {
+    pathToRoot: '../',        // a relative path to the index.html file
+    view: view,               // the current view
+    components: components,   // a list of all the components,
+    views: views              // a list of all the views
+};
+```
 
 ## grunt-emo
 
