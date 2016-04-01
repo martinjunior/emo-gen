@@ -12,7 +12,7 @@ npm install emo-gen --save-dev
 
 `emo-gen` aids in the developemnt of style-guides, providing a slim API by which a style-guide may be generated. `emo-gen` uses the [Nunjucks.js](https://mozilla.github.io/nunjucks/) template engine.
 
-## Usage
+## Usage (API)
 
 After intalling `emo-gen`, you may include it in your project like so.
 
@@ -59,7 +59,7 @@ styleGuideGenerator.place().then(function() {
 
 ### styleGuideGenerator.copy(files)
 
-Copy the provided files. Know that `files` must be an array containing src-dest files mappings. `copy` returns a promise.
+Copy the provided files. `files` must be an array containing src-dest files mappings. `copy` returns a promise.
 
 ```javascript
 var files = [{
@@ -72,9 +72,9 @@ styleGuideGenerator.copy(files).then(function() {
 });
 ```
 
-### styleGuideGenerator.build(componentFiles, viewDir, componentData)
+### styleGuideGenerator.build(componentFiles, viewDir)
 
-Build the style-guide from the provided parameters. The `componentFiles` parameter must be a list of files and/or glob patterns (e.g., `['src/assets/scss/**']`). The `viewDir` parameter must be a relative path from the root of the style-guide source directory (`styleguide/src/` by default). `emo-gen` will treat all the `.html` files within the `viewDir` as static pages, building each one using Nunjucks api. `componentData` is an optional parameter that must take the shape of a component collection.
+Build the style-guide from the provided parameters. The `componentFiles` parameter must be a list of files and/or glob patterns (e.g., `['src/assets/scss/**']`). The `viewDir` parameter must be a relative path from the root of the style-guide source directory (`styleguide/src/` by default). `emo-gen` will treat all the `.html` files within the `viewDir` as static pages, building each one via the Nunjucks api.
 
 Example:
 
@@ -87,13 +87,7 @@ var componentFiles = [
 
 var viewDir = 'views';
 
-var componentData = [{
-    name: 'colors',
-    category: 'standards',
-    description: 'docs/colors.md'
-}];
-
-styleGuideGenerator.build(componentFiles, viewDir, componentData).then(function() {
+styleGuideGenerator.build(componentFiles, viewDir).then(function() {
     // the style-guide was built!
 });
 ```
@@ -134,6 +128,8 @@ description: <button>I'm a button!<button>
 .btn { ... }
 ```
 
+### Loading External Documenation
+
 Because writing a bunch of documentation in your source files isn't fun, `emo-gen` makes it possible to load external documentation from markdown files. Note that the specified path should be relative to the file in which it was written.
 
 ```css
@@ -150,7 +146,27 @@ description: relative/path/to/btn_docs.md
 .btn { ... }
 ```
 
-`emo-gen` expects that all components use a `name`, `category`, and `description` property; if a component does not use these properties, it will not show up in the style-guide. The `description` property will be used as the main body of a given components documentation. Beyond these properties, `emo-gen` will allow you to add properties as you wish.
+### Eliminate the Need for Doc Blocks
+
+`emo-gen` also allows you to lose the need for documentation blocks altogether. To do so, simply add your doc blocks to the markdown files themselves and tell `emo-gen` to scrape them, like so `var componentFile = ['src/assets/scss/**/*.md'];`.
+
+```markdown
+---
+name: Btn
+category: Content
+---
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
+
+<button>I'm a button</button>
+```
+
+Note that when `emo-gen` is scraping `.md` files, it will ignore the description value of the YAML front matter block. In its place, `emo-gen` will instead use the remaining content of the `.md` file as the value of the `description` property.
+
+### Doc Block Requirements
+
+`emo-gen` expects that all components use a `name`, `category`, and `description` property; if a component does not use these properties, it will not show up in the style-guide. The `description` property will be used as the main body of a given component's documentation. Beyond these properties, `emo-gen` will allow you to add properties as you wish.
 
 ```css
 /*
@@ -168,6 +184,52 @@ description: relative/path/to/btn_docs.md
 .btn { ... }
 ```
 
+Additional properties will be available in the component template via the `component` global. For example, the `author` property added above may be rendered in the component template like so.
+
+```markup
+{{ component.author }}
+```
+
+## Nunjucks in Markdown
+
+`emo-gen` exposes the Nunjucks API to the markdown files it processes. This allows documentation authors to load partials, macros, and use oher Nunjucks goodness in your documentation.
+
+Imagine you create a macro for a `card` component.
+
+```markup
+<!-- in styleguide/src/macros/card.html -->
+
+{% macro card(title, body) %}
+<div class="card">
+    <div class="card-hd">{{ title }}</div>
+    <div class="card-bd">{{ body }}</div>
+    <div class="card-ft">
+        <button type="button" class="btn">read more</button>
+    </div>
+</div>
+{% endmacro %}
+```
+
+Now, you want to document the card, so you create a mardown file. Since `emo-gen` exposes Nunjucks to markdown files, you can do this.
+
+```markdown
+---
+name: Card
+category: Molecules
+---
+
+<!-- this path must be relative from the root of the style-guide source directory -->
+{% import 'macros/card.html' as macros %}
+
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda mollitia aspernatur id ipsam dolorem, quos quasi rem ad sunt nemo eaque est illo et, quisquam, natus veniam fugit magnam minus.
+
+<div class="sg-example">
+    {{ macros.card('Lorem ipsum.', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum magnam autem fugiat aperiam omnis! Itaque animi dicta veniam dolore neque alias rem distinctio, laborum commodi.') }}
+</div>
+```
+
+See the [Nunjucks API referrence](https://mozilla.github.io/nunjucks/api.html) to learn more about you can do with Nunjucks.
+
 ## The Source Files
 
 The style-guide source directory contains the following.
@@ -183,7 +245,7 @@ The style-guide source directory contains the following.
 ------------/_nav.html            <- the main navigation (renders component list)
 --------/templates/
 ------------/component.html       <- the default component template
-----/index.html                   <- the style-guide's homepage
+--------/index.html               <- the style-guide's homepage
 ```
 
 ## The Build
@@ -196,14 +258,14 @@ The style-guide destination folder will look as such.
 ------------/styles/
 ----------------/styleguide.css   <- the style-guide's styles
 ----------------/app.css          <- styles copied over
-----/category/                    <- each category gets its own folder
---------/btn.html                 <- each component gets its own file
-----/other-category/
---------/box.html
---------/card.html
-----/third-category/
---------/anchor.html
-----/index.html                   <- the style-guide's homepage
+--------/category/                <- each category gets its own folder
+------------/btn.html             <- each component gets its own file
+------------/other-category/
+------------/box.html
+------------/card.html
+--------/third-category/
+------------/anchor.html
+--------/index.html               <- the style-guide's homepage
 ```
 
 ### The Build Process
@@ -277,8 +339,8 @@ The previous documentation will generate the following structure.
 
 ```
 ----/styleguide/dest/
-----/Content/
---------/Btn.html                 <- notice how I'm named after my name
+--------/Content/
+------------/Btn.html             <- notice how I'm named after my name
 ```
 
 To change this default, apply a filename property to your doc block. Like so:
