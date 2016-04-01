@@ -22,15 +22,17 @@ var StyleGuideGenerator = require('emo-gen');
 
 `emo-gen` exposes the `StyleGuideGenerator` class, which makes available a number of methods.
 
-### StyleGuideGenerator(options)
+### StyleGuideGenerator(options, nunjucksOptions)
 
-The `StyleGuideGenerator` constructor accepts one parameter (`options`).
+The `StyleGuideGenerator` constructor accepts two parameters (`options` and `nunjucksOptions`).
 
-Options:
+options:
 
 - path (`Object`): an object containing a `src` and/or `dest` property
     - src (`String`): the location where the style-guide source code is to be placed
     - dest (`String`): the location where the style-guide will build to
+
+nunjucksOptions: see nunjuck's [options](https://mozilla.github.io/nunjucks/api.html#configure) for more information
 
 Default options:
 
